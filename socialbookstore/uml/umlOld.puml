@@ -1,0 +1,236 @@
+@startuml SocialBookStore
+
+package "controllers" {
+    class AuthController {
+        +login()
+        +register()
+        +registerUser()
+    }
+
+    class UserController {
+        +getUserMainMenu()
+        +retrieveProfile()
+        +saveProfile()
+        +listBookOffers()
+        +showOfferForm()
+        +saveOffer()
+        +showSearchForm()
+        +search()
+        +showRecommendationsForm()
+        +recommend()
+        +request()
+        +showUserBookRequests()
+        +showRequestingUsersForBookOffer()
+        +acceptRequest()
+        +deleteBookOffer()
+        +deleteBookRequest()
+    }
+}
+package "datamodel"
+{
+    package "recomstrategies" {
+        class FavouriteAuthorsStrategy {
+            +recommend()
+            +retrieveRecommendedBooks()
+        }
+
+        class FavouriteCategoriesAndAuthorsStrategy {
+            +recommend()
+            +retrieveRecommendedBooks()
+        }
+        class FavouriteCategoriesStrategy 
+        {
+            +recommend()
+            +retrieveRecommendedBooks()
+        }
+
+        class RecommendationsFactory {
+            +create()
+        }
+
+        interface RecommendationsStrategy
+        {
+            +recommend()
+        }
+    }
+
+    package "searchstrategies" {
+        class ApproximateSearchStrategy {
+            +search()
+            +makeInitialListOfBooks()
+            +checkIfAuthorsMatch()
+        }
+
+        class ExactSearchStrategy {
+            +search()
+            +makeInitialListOfBooks()
+            +checkIfAuthorsMatch()
+        }
+
+        class SearchFactory {
+            +create()
+        }
+
+        interface SearchStrategy
+        {
+            +search()
+        }
+    }    
+    class Book 
+    {
+        +buildDto()
+        +addAuthor()
+        +belongsTo()
+        +writtenBy()
+        +buildAuthorsList()
+        +authorsListIncludes()
+        +addRequestingUser()
+        +getRequestingUserProfileDtos()
+    }
+    class BookAuthor
+    {
+        +equals()
+    }
+    class BookCategory
+    {
+        +hashCod()
+        +equals()
+        +checkName()
+    }
+    class Role
+    class User
+    {
+      +getAuthorities()
+      +isAccountNonExpired()
+      +isAccountNonLocked()
+      +isCredentialsNonExpired()
+      +isEnabled()
+    }
+    class UserProfile
+    {
+        +addBookAuthor()
+        +addBookCategory()
+        +buildBookOffersDtos()
+        +buildBookRequestsDtos()
+        +buildProfileDto()
+        +clear()
+        +addBookOffer()
+        +getBooksOfFavouriteCategories()
+        +getBooksFromFavouriteAuthors()
+    }
+    class UserProfile2
+    {
+        +addBookAuthor()
+        +addBookCategory()
+        +buildBookOffersDtos()
+        +buildProfileDto()
+        clear()
+    }
+}
+package "formsdata"
+{
+    class BookDto
+    {
+        +toString()
+        +buildBookOffer()
+    }
+    class RecommendationsDto
+    class SearchDto
+    class UserProfileDto
+    {
+        +toString()
+        +buildUserProfile()
+    }
+}
+package "mappers"
+{
+    class BookAuthorMapper{
+        findByName()
+    }
+    class BookCategoryMapper{
+        findByName()
+    }
+    class BookDtoMapper
+    class BookMapper{
+        findByTitle()
+        findByTitleContaining()
+    }
+    class UserMapper{
+        findByUsername()
+    }
+    class UserProfileMapper{
+        findByUsername()
+    }
+}
+package "services"
+{
+    interface UserService{
+        +saveUser()
+        +isUserPresent()
+        +findById()
+    }
+    class UserServiceImpl
+    {
+        +saveUser()
+        +isUserPresent()
+        +loadUserByUsername()
+        +findById()
+    }
+}
+class SocialbookstoreApplication
+{
+    + main()
+}
+FavouriteCategoriesAndAuthorsStrategy <-- RecommendationsFactory:uses
+FavouriteAuthorsStrategy <-- RecommendationsFactory:uses
+FavouriteCategoriesStrategy <-- RecommendationsFactory:uses
+RecommendationsStrategy <|-- FavouriteAuthorsStrategy
+RecommendationsStrategy <|-- FavouriteCategoriesAndAuthorsStrategy
+RecommendationsStrategy <|-- FavouriteCategoriesStrategy
+ApproximateSearchStrategy <-- SearchFactory:uses
+ExactSearchStrategy <-- SearchFactory:uses
+SearchStrategy <|-- ApproximateSearchStrategy
+SearchStrategy <|-- ExactSearchStrategy
+UserService <|-- UserServiceImpl
+Book "many" -- "1" BookCategory
+Book "many" -- "many" BookAuthor
+Book "many" -- "many" UserProfile
+BookAuthor "many" -- "many" UserProfile
+UserProfile "many" -- "many" BookCategory
+User --> Role :uses
+BookDto ..> BookAuthorMapper
+BookDto ..> BookCategoryMapper
+BookDto ..> Book
+BookDto ..> BookCategory
+BookDto ..> BookAuthor
+UserProfileDto ..> BookAuthor
+UserProfileDto ..> BookCategory
+UserProfileDto ..> UserProfile
+UserProfileDto ..> BookAuthorMapper
+UserProfileDto ..> BookCategoryMapper
+BookAuthorMapper ..> BookAuthor
+BookCategoryMapper ..> BookCategory
+BookMapper ..> Book
+UserMapper ..> User
+UserProfileMapper ..> UserProfile
+AuthController --> UserService:uses
+AuthController ..> User
+UserController -->UserService:uses
+UserController --> BookCategoryMapper:uses
+UserController --> BookAuthorMapper:uses
+UserController --> BookMapper:uses
+UserController --> SearchFactory:uses
+UserController --> RecommendationsFactory:uses
+UserController --> UserProfileMapper:uses
+UserController ..> Book
+UserController ..> RecommendationsStrategy
+UserController ..> SearchStrategy
+UserController ..> BookDto
+UserController ..> UserProfile
+UserController ..> BookCategory
+UserController ..> RecommendationsDto
+UserController ..> SearchDto
+UserController ..> UserProfileDto
+UserServiceImpl --> UserMapper:uses
+UserServiceImpl ..> User 
+@enduml
