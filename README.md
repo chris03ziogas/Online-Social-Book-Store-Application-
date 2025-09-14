@@ -1,4 +1,4 @@
-# Online-Social-Book-Store-Application-
+# Online-Social-Book-Store-Application
 A Spring Boot Java Web application 
 
 This project was developed as part of the **Software Development II** course
