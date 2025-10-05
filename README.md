@@ -1,7 +1,9 @@
 # Online-Social-Book-Store-Application
-A Spring Boot Java Web application 
 
-This project was developed as part of the **Software Development II** course
+The Online Social Book Store Application is a Java-based web application built with Spring Boot. It allows users to browse, search, and exchange used books for free, fostering a community-driven platform for book lovers.
+
+As part of the Software Development II course, this project focused on improving the existing application through refactoring and testing, while also implementing several improvement and extension tasks.
+
 ---
 ##Programming Language
 - Java, SQL
